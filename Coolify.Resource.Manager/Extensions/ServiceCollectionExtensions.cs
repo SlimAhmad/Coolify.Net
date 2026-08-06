@@ -6,8 +6,10 @@
 using System.Net.Http.Headers;
 using Coolify.Resource.Manager.Brokers.CoolifyApis;
 using Coolify.Resource.Manager.Brokers.Loggings;
+using Coolify.Resource.Manager.Clients.Applications;
 using Coolify.Resource.Manager.Clients.Projects;
 using Coolify.Resource.Manager.Clients.Servers;
+using Coolify.Resource.Manager.Services.Foundations.Applications;
 using Coolify.Resource.Manager.Services.Foundations.Projects;
 using Coolify.Resource.Manager.Services.Foundations.Servers;
 using Coolify.Resource.Manager.Services.Processings.Projects;
@@ -48,6 +50,7 @@ namespace Coolify.Resource.Manager.Extensions
             // Foundation Services
             services.AddTransient<IServerService, ServerService>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IApplicationService, ApplicationService>();
 
             // Processing Services
             services.AddTransient<IServerProcessingService, ServerProcessingService>();
@@ -56,6 +59,7 @@ namespace Coolify.Resource.Manager.Extensions
             // Clients (public surface)
             services.AddTransient<IServerClient, ServerClient>();
             services.AddTransient<IProjectClient, ProjectClient>();
+            services.AddTransient<IApplicationClient, ApplicationClient>();
 
             return services;
         }
