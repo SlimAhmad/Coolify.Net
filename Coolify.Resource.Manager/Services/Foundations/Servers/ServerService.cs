@@ -23,85 +23,98 @@ namespace Coolify.Resource.Manager.Services.Foundations.Servers
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<IEnumerable<Server>> RetrieveAllServersAsync() =>
+        public ValueTask<IEnumerable<Server>> RetrieveAllServersAsync(CancellationToken cancellationToken = default) =>
             TryCatch(async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 IEnumerable<ExternalServer> externalServers =
-                    await this.coolifyApiBroker.GetAllServersAsync();
+                    await this.coolifyApiBroker.GetAllServersAsync(cancellationToken);
 
                 return externalServers.Select(ConvertToServer);
             });
 
-        public ValueTask<Server> RetrieveServerByUuidAsync(string serverUuid) =>
+        public ValueTask<Server> RetrieveServerByUuidAsync(
+            string serverUuid, CancellationToken cancellationToken = default) =>
+                TryCatch(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    ValidateServerUuid(serverUuid);
+
+                    ExternalServer externalServer =
+                        await this.coolifyApiBroker.GetServerByUuidAsync(serverUuid, cancellationToken);
+
+                    return ConvertToServer(externalServer);
+                });
+
+        public ValueTask<Server> AddServerAsync(Server server, CancellationToken cancellationToken = default) =>
             TryCatch(async () =>
             {
-                ValidateServerUuid(serverUuid);
-
-                ExternalServer externalServer =
-                    await this.coolifyApiBroker.GetServerByUuidAsync(serverUuid);
-
-                return ConvertToServer(externalServer);
-            });
-
-        public ValueTask<Server> AddServerAsync(Server server) =>
-            TryCatch(async () =>
-            {
+                cancellationToken.ThrowIfCancellationRequested();
                 ValidateServer(server);
 
                 ExternalServer externalServer = ConvertToExternalServer(server);
 
                 ExternalServer returnedExternalServer =
-                    await this.coolifyApiBroker.PostServerAsync(externalServer);
+                    await this.coolifyApiBroker.PostServerAsync(externalServer, cancellationToken);
 
                 return ConvertToServer(returnedExternalServer);
             });
 
-        public ValueTask<Server> ModifyServerAsync(Server server) =>
+        public ValueTask<Server> ModifyServerAsync(Server server, CancellationToken cancellationToken = default) =>
             TryCatch(async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 ValidateServer(server);
 
                 ExternalServer externalServer = ConvertToExternalServer(server);
 
                 ExternalServer returnedExternalServer =
-                    await this.coolifyApiBroker.PatchServerAsync(externalServer);
+                    await this.coolifyApiBroker.PatchServerAsync(externalServer, cancellationToken);
 
                 return ConvertToServer(returnedExternalServer);
             });
 
-        public ValueTask RemoveServerAsync(string serverUuid) =>
+        public ValueTask RemoveServerAsync(string serverUuid, CancellationToken cancellationToken = default) =>
             TryCatch(async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 ValidateServerUuid(serverUuid);
-                await this.coolifyApiBroker.DeleteServerAsync(serverUuid);
+                await this.coolifyApiBroker.DeleteServerAsync(serverUuid, cancellationToken);
             });
 
-        public ValueTask<Server> RetrieveServerValidationAsync(string serverUuid) =>
-            TryCatch(async () =>
-            {
-                ValidateServerUuid(serverUuid);
+        public ValueTask<Server> RetrieveServerValidationAsync(
+            string serverUuid, CancellationToken cancellationToken = default) =>
+                TryCatch(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    ValidateServerUuid(serverUuid);
 
-                ExternalServer externalServer =
-                    await this.coolifyApiBroker.GetValidateServerAsync(serverUuid);
+                    ExternalServer externalServer =
+                        await this.coolifyApiBroker.GetValidateServerAsync(serverUuid, cancellationToken);
 
-                return ConvertToServer(externalServer);
-            });
+                    return ConvertToServer(externalServer);
+                });
 
-        public ValueTask<IEnumerable<object>> RetrieveServerResourcesAsync(string serverUuid) =>
-            TryCatch(async () =>
-            {
-                ValidateServerUuid(serverUuid);
+        public ValueTask<IEnumerable<object>> RetrieveServerResourcesAsync(
+            string serverUuid, CancellationToken cancellationToken = default) =>
+                TryCatch(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    ValidateServerUuid(serverUuid);
 
-                return await this.coolifyApiBroker.GetServerResourcesAsync(serverUuid);
-            });
+                    return await this.coolifyApiBroker.GetServerResourcesAsync(serverUuid, cancellationToken);
+                });
 
-        public ValueTask<IEnumerable<string>> RetrieveServerDomainsAsync(string serverUuid) =>
-            TryCatch(async () =>
-            {
-                ValidateServerUuid(serverUuid);
+        public ValueTask<IEnumerable<string>> RetrieveServerDomainsAsync(
+            string serverUuid, CancellationToken cancellationToken = default) =>
+                TryCatch(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    ValidateServerUuid(serverUuid);
 
-                return await this.coolifyApiBroker.GetServerDomainsAsync(serverUuid);
-            });
+                    return await this.coolifyApiBroker.GetServerDomainsAsync(serverUuid, cancellationToken);
+                });
 
         // ---- Conversion helpers ----
 

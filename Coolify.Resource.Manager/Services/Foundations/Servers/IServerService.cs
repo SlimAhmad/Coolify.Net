@@ -9,13 +9,13 @@ namespace Coolify.Resource.Manager.Services.Foundations.Servers
 {
     public interface IServerService
     {
-        ValueTask<IEnumerable<Server>> RetrieveAllServersAsync();
-        ValueTask<Server> RetrieveServerByUuidAsync(string serverUuid);
-        ValueTask<Server> AddServerAsync(Server server);
-        ValueTask<Server> ModifyServerAsync(Server server);
-        ValueTask RemoveServerAsync(string serverUuid);
-        ValueTask<Server> RetrieveServerValidationAsync(string serverUuid);
-        ValueTask<IEnumerable<object>> RetrieveServerResourcesAsync(string serverUuid);
-        ValueTask<IEnumerable<string>> RetrieveServerDomainsAsync(string serverUuid);
+        ValueTask<IEnumerable<Server>> RetrieveAllServersAsync(CancellationToken cancellationToken = default);
+        ValueTask<Server> RetrieveServerByUuidAsync(string serverUuid, CancellationToken cancellationToken = default);
+        ValueTask<Server> AddServerAsync(Server server, CancellationToken cancellationToken = default);
+        ValueTask<Server> ModifyServerAsync(Server server, CancellationToken cancellationToken = default);
+        ValueTask RemoveServerAsync(string serverUuid, CancellationToken cancellationToken = default);
+        ValueTask<Server> RetrieveServerValidationAsync(string serverUuid, CancellationToken cancellationToken = default);
+        ValueTask<IEnumerable<object>> RetrieveServerResourcesAsync(string serverUuid, CancellationToken cancellationToken = default);
+        ValueTask<IEnumerable<string>> RetrieveServerDomainsAsync(string serverUuid, CancellationToken cancellationToken = default);
     }
 }

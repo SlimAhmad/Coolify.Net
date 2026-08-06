@@ -19,11 +19,12 @@ namespace Coolify.Resource.Manager.Clients.Servers
         public ServerClient(IServerService serverService) =>
             this.serverService = serverService;
 
-        public async ValueTask<IEnumerable<Server>> RetrieveAllServersAsync()
+        public async ValueTask<IEnumerable<Server>> RetrieveAllServersAsync(
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.RetrieveAllServersAsync();
+                return await this.serverService.RetrieveAllServersAsync(cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -44,6 +45,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -51,11 +56,12 @@ namespace Coolify.Resource.Manager.Clients.Servers
             }
         }
 
-        public async ValueTask<Server> RetrieveServerByUuidAsync(string serverUuid)
+        public async ValueTask<Server> RetrieveServerByUuidAsync(
+            string serverUuid, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.RetrieveServerByUuidAsync(serverUuid);
+                return await this.serverService.RetrieveServerByUuidAsync(serverUuid, cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -76,6 +82,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -83,11 +93,11 @@ namespace Coolify.Resource.Manager.Clients.Servers
             }
         }
 
-        public async ValueTask<Server> AddServerAsync(Server server)
+        public async ValueTask<Server> AddServerAsync(Server server, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.AddServerAsync(server);
+                return await this.serverService.AddServerAsync(server, cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -108,6 +118,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -115,11 +129,11 @@ namespace Coolify.Resource.Manager.Clients.Servers
             }
         }
 
-        public async ValueTask<Server> ModifyServerAsync(Server server)
+        public async ValueTask<Server> ModifyServerAsync(Server server, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.ModifyServerAsync(server);
+                return await this.serverService.ModifyServerAsync(server, cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -140,6 +154,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -147,11 +165,11 @@ namespace Coolify.Resource.Manager.Clients.Servers
             }
         }
 
-        public async ValueTask RemoveServerAsync(string serverUuid)
+        public async ValueTask RemoveServerAsync(string serverUuid, CancellationToken cancellationToken = default)
         {
             try
             {
-                await this.serverService.RemoveServerAsync(serverUuid);
+                await this.serverService.RemoveServerAsync(serverUuid, cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -172,6 +190,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -179,11 +201,12 @@ namespace Coolify.Resource.Manager.Clients.Servers
             }
         }
 
-        public async ValueTask<Server> RetrieveServerValidationAsync(string serverUuid)
+        public async ValueTask<Server> RetrieveServerValidationAsync(
+            string serverUuid, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.RetrieveServerValidationAsync(serverUuid);
+                return await this.serverService.RetrieveServerValidationAsync(serverUuid, cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -204,6 +227,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -211,11 +238,12 @@ namespace Coolify.Resource.Manager.Clients.Servers
             }
         }
 
-        public async ValueTask<IEnumerable<object>> RetrieveServerResourcesAsync(string serverUuid)
+        public async ValueTask<IEnumerable<object>> RetrieveServerResourcesAsync(
+            string serverUuid, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.RetrieveServerResourcesAsync(serverUuid);
+                return await this.serverService.RetrieveServerResourcesAsync(serverUuid, cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -236,6 +264,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -243,11 +275,12 @@ namespace Coolify.Resource.Manager.Clients.Servers
             }
         }
 
-        public async ValueTask<IEnumerable<string>> RetrieveServerDomainsAsync(string serverUuid)
+        public async ValueTask<IEnumerable<string>> RetrieveServerDomainsAsync(
+            string serverUuid, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.RetrieveServerDomainsAsync(serverUuid);
+                return await this.serverService.RetrieveServerDomainsAsync(serverUuid, cancellationToken);
             }
             catch (ServerValidationException serverValidationException)
             {
@@ -268,6 +301,10 @@ namespace Coolify.Resource.Manager.Clients.Servers
             {
                 throw CreateServerClientDependencyException(
                     serverServiceException.InnerException as Xeption);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {

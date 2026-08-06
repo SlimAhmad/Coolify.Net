@@ -81,6 +81,20 @@ namespace Coolify.Resource.Manager.Services.Foundations.Servers
 
                 throw await CreateAndLogCriticalDependencyExceptionAsync(failedServerDependencyException);
             }
+            catch (OperationCanceledException operationCanceledException)
+                when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
+            {
+                var failedServerDependencyException =
+                    new FailedServerDependencyException(
+                        message: "Failed server dependency error occurred.",
+                        innerException: operationCanceledException);
+
+                throw await CreateAndLogDependencyExceptionAsync(failedServerDependencyException);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (Exception exception)
             {
                 var failedServerServiceException =
@@ -114,6 +128,20 @@ namespace Coolify.Resource.Manager.Services.Foundations.Servers
                         innerException: httpRequestException);
 
                 throw await CreateAndLogDependencyExceptionAsync(failedServerDependencyException);
+            }
+            catch (OperationCanceledException operationCanceledException)
+                when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
+            {
+                var failedServerDependencyException =
+                    new FailedServerDependencyException(
+                        message: "Failed server dependency error occurred.",
+                        innerException: operationCanceledException);
+
+                throw await CreateAndLogDependencyExceptionAsync(failedServerDependencyException);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
