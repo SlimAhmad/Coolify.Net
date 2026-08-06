@@ -84,12 +84,12 @@ namespace Coolify.Resource.Manager.Services.Foundations.Applications
             catch (OperationCanceledException operationCanceledException)
                 when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
             {
-                var failedApplicationDependencyException =
-                    new FailedApplicationDependencyException(
-                        message: "Failed application dependency error occurred.",
+                var timeoutApplicationException =
+                    new TimeoutApplicationException(
+                        message: "Application dependency timeout error occurred.",
                         innerException: operationCanceledException);
 
-                throw await CreateAndLogDependencyExceptionAsync(failedApplicationDependencyException);
+                throw await CreateAndLogDependencyExceptionAsync(timeoutApplicationException);
             }
             catch (OperationCanceledException)
             {
@@ -132,12 +132,12 @@ namespace Coolify.Resource.Manager.Services.Foundations.Applications
             catch (OperationCanceledException operationCanceledException)
                 when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
             {
-                var failedApplicationDependencyException =
-                    new FailedApplicationDependencyException(
-                        message: "Failed application dependency error occurred.",
+                var timeoutApplicationException =
+                    new TimeoutApplicationException(
+                        message: "Application dependency timeout error occurred.",
                         innerException: operationCanceledException);
 
-                throw await CreateAndLogDependencyExceptionAsync(failedApplicationDependencyException);
+                throw await CreateAndLogDependencyExceptionAsync(timeoutApplicationException);
             }
             catch (OperationCanceledException)
             {

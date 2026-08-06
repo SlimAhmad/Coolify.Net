@@ -5,9 +5,9 @@
 
 using Coolify.Resource.Manager.Models.Clients.Applications.Exceptions;
 using Coolify.Resource.Manager.Models.Foundations.Applications;
-using Coolify.Resource.Manager.Models.Foundations.Applications.Exceptions;
 using Coolify.Resource.Manager.Models.Foundations.EnvironmentVariables;
-using Coolify.Resource.Manager.Services.Foundations.Applications;
+using Coolify.Resource.Manager.Models.Processings.Applications.Exceptions;
+using Coolify.Resource.Manager.Services.Processings.Applications;
 using Xeptions;
 
 namespace Coolify.Resource.Manager.Clients.Applications
@@ -15,34 +15,34 @@ namespace Coolify.Resource.Manager.Clients.Applications
     /// <summary>Provides application provisioning and management operations.</summary>
     internal class ApplicationClient : IApplicationClient
     {
-        private readonly IApplicationService applicationService;
+        private readonly IApplicationProcessingService applicationProcessingService;
 
-        public ApplicationClient(IApplicationService applicationService) =>
-            this.applicationService = applicationService;
+        public ApplicationClient(IApplicationProcessingService applicationProcessingService) =>
+            this.applicationProcessingService = applicationProcessingService;
 
         public async ValueTask<IEnumerable<Application>> RetrieveAllApplicationsAsync(
             CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.applicationService.RetrieveAllApplicationsAsync(cancellationToken);
+                return await this.applicationProcessingService.RetrieveAllApplicationsAsync(cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -62,24 +62,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.RetrieveApplicationByUuidAsync(applicationUuid, cancellationToken);
+                return await this.applicationProcessingService.RetrieveApplicationByUuidAsync(applicationUuid, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -99,24 +99,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.AddPublicApplicationAsync(application, cancellationToken);
+                return await this.applicationProcessingService.AddPublicApplicationAsync(application, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -136,24 +136,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.AddPrivateGithubAppApplicationAsync(application, cancellationToken);
+                return await this.applicationProcessingService.AddPrivateGithubAppApplicationAsync(application, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -173,24 +173,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.AddPrivateDeployKeyApplicationAsync(application, cancellationToken);
+                return await this.applicationProcessingService.AddPrivateDeployKeyApplicationAsync(application, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -210,24 +210,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.AddDockerfileApplicationAsync(application, cancellationToken);
+                return await this.applicationProcessingService.AddDockerfileApplicationAsync(application, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -247,24 +247,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.AddDockerImageApplicationAsync(application, cancellationToken);
+                return await this.applicationProcessingService.AddDockerImageApplicationAsync(application, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -284,24 +284,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.ModifyApplicationAsync(application, cancellationToken);
+                return await this.applicationProcessingService.ModifyApplicationAsync(application, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -321,24 +321,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                await this.applicationService.RemoveApplicationAsync(applicationUuid, cancellationToken);
+                await this.applicationProcessingService.RemoveApplicationAsync(applicationUuid, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -358,24 +358,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.RetrieveAllApplicationEnvVarsAsync(applicationUuid, cancellationToken);
+                return await this.applicationProcessingService.RetrieveAllApplicationEnvVarsAsync(applicationUuid, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -395,25 +395,25 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.AddApplicationEnvVarAsync(
+                return await this.applicationProcessingService.AddApplicationEnvVarAsync(
                     applicationUuid, environmentVariable, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -433,25 +433,25 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.ModifyApplicationEnvVarAsync(
+                return await this.applicationProcessingService.ModifyApplicationEnvVarAsync(
                     applicationUuid, environmentVariable, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -473,25 +473,25 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                return await this.applicationService.ModifyBulkApplicationEnvVarsAsync(
+                return await this.applicationProcessingService.ModifyBulkApplicationEnvVarsAsync(
                     applicationUuid, environmentVariables, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -511,25 +511,25 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                await this.applicationService.RemoveApplicationEnvVarAsync(
+                await this.applicationProcessingService.RemoveApplicationEnvVarAsync(
                     applicationUuid, environmentVariableUuid, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -549,24 +549,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                await this.applicationService.StartApplicationAsync(applicationUuid, cancellationToken);
+                await this.applicationProcessingService.StartApplicationAsync(applicationUuid, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -586,24 +586,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                await this.applicationService.StopApplicationAsync(applicationUuid, cancellationToken);
+                await this.applicationProcessingService.StopApplicationAsync(applicationUuid, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);
@@ -623,24 +623,24 @@ namespace Coolify.Resource.Manager.Clients.Applications
         {
             try
             {
-                await this.applicationService.RestartApplicationAsync(applicationUuid, cancellationToken);
+                await this.applicationProcessingService.RestartApplicationAsync(applicationUuid, cancellationToken);
             }
-            catch (ApplicationValidationException applicationValidationException)
+            catch (ApplicationProcessingValidationException applicationValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyValidationException applicationDependencyValidationException)
+            catch (ApplicationProcessingDependencyValidationException applicationDependencyValidationException)
             {
                 throw CreateApplicationClientValidationException(
                     applicationDependencyValidationException.InnerException as Xeption);
             }
-            catch (ApplicationDependencyException applicationDependencyException)
+            catch (ApplicationProcessingDependencyException applicationDependencyException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationDependencyException.InnerException as Xeption);
             }
-            catch (ApplicationServiceException applicationServiceException)
+            catch (ApplicationProcessingServiceException applicationServiceException)
             {
                 throw CreateApplicationClientDependencyException(
                     applicationServiceException.InnerException as Xeption);

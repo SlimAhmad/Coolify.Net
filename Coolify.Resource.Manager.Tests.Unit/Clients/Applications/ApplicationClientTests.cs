@@ -5,9 +5,9 @@
 
 using Coolify.Resource.Manager.Clients.Applications;
 using Coolify.Resource.Manager.Models.Foundations.Applications;
-using Coolify.Resource.Manager.Models.Foundations.Applications.Exceptions;
 using Coolify.Resource.Manager.Models.Foundations.EnvironmentVariables;
-using Coolify.Resource.Manager.Services.Foundations.Applications;
+using Coolify.Resource.Manager.Models.Processings.Applications.Exceptions;
+using Coolify.Resource.Manager.Services.Processings.Applications;
 using Moq;
 using Xeptions;
 
@@ -15,13 +15,15 @@ namespace Coolify.Resource.Manager.Tests.Unit.Clients.Applications
 {
     public partial class ApplicationClientTests
     {
-        private readonly Mock<IApplicationService> applicationServiceMock;
+        private readonly Mock<IApplicationProcessingService> applicationServiceMock;
         private readonly IApplicationClient applicationClient;
 
         public ApplicationClientTests()
         {
-            this.applicationServiceMock = new Mock<IApplicationService>();
-            this.applicationClient = new ApplicationClient(applicationService: this.applicationServiceMock.Object);
+            this.applicationServiceMock = new Mock<IApplicationProcessingService>();
+
+            this.applicationClient = new ApplicationClient(
+                applicationProcessingService: this.applicationServiceMock.Object);
         }
 
         private static string GetRandomString() => Guid.NewGuid().ToString();
@@ -46,8 +48,8 @@ namespace Coolify.Resource.Manager.Tests.Unit.Clients.Applications
 
             return new TheoryData<Xeption>
             {
-                new ApplicationValidationException("test", inner),
-                new ApplicationDependencyValidationException("test", inner)
+                new ApplicationProcessingValidationException("test", inner),
+                new ApplicationProcessingDependencyValidationException("test", inner)
             };
         }
 
@@ -57,8 +59,8 @@ namespace Coolify.Resource.Manager.Tests.Unit.Clients.Applications
 
             return new TheoryData<Xeption>
             {
-                new ApplicationDependencyException("test", inner),
-                new ApplicationServiceException("test", inner)
+                new ApplicationProcessingDependencyException("test", inner),
+                new ApplicationProcessingServiceException("test", inner)
             };
         }
     }
