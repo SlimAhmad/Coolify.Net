@@ -10,6 +10,7 @@ using Coolify.Resource.Manager.Clients.Projects;
 using Coolify.Resource.Manager.Clients.Servers;
 using Coolify.Resource.Manager.Services.Foundations.Projects;
 using Coolify.Resource.Manager.Services.Foundations.Servers;
+using Coolify.Resource.Manager.Services.Processings.Projects;
 using Coolify.Resource.Manager.Services.Processings.Servers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -50,6 +51,7 @@ namespace Coolify.Resource.Manager.Extensions
 
             // Processing Services
             services.AddTransient<IServerProcessingService, ServerProcessingService>();
+            services.AddTransient<IProjectProcessingService, ProjectProcessingService>();
 
             // Clients (public surface)
             services.AddTransient<IServerClient, ServerClient>();

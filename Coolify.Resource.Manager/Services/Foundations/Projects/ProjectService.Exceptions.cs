@@ -84,12 +84,12 @@ namespace Coolify.Resource.Manager.Services.Foundations.Projects
             catch (OperationCanceledException operationCanceledException)
                 when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
             {
-                var failedProjectDependencyException =
-                    new FailedProjectDependencyException(
-                        message: "Failed project dependency error occurred.",
+                var timeoutProjectException =
+                    new TimeoutProjectException(
+                        message: "Project dependency timeout error occurred.",
                         innerException: operationCanceledException);
 
-                throw await CreateAndLogDependencyExceptionAsync(failedProjectDependencyException);
+                throw await CreateAndLogDependencyExceptionAsync(timeoutProjectException);
             }
             catch (OperationCanceledException)
             {
@@ -132,12 +132,12 @@ namespace Coolify.Resource.Manager.Services.Foundations.Projects
             catch (OperationCanceledException operationCanceledException)
                 when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
             {
-                var failedProjectDependencyException =
-                    new FailedProjectDependencyException(
-                        message: "Failed project dependency error occurred.",
+                var timeoutProjectException =
+                    new TimeoutProjectException(
+                        message: "Project dependency timeout error occurred.",
                         innerException: operationCanceledException);
 
-                throw await CreateAndLogDependencyExceptionAsync(failedProjectDependencyException);
+                throw await CreateAndLogDependencyExceptionAsync(timeoutProjectException);
             }
             catch (OperationCanceledException)
             {
