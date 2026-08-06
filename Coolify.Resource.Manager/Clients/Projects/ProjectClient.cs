@@ -5,8 +5,8 @@
 
 using Coolify.Resource.Manager.Models.Clients.Projects.Exceptions;
 using Coolify.Resource.Manager.Models.Foundations.Projects;
-using Coolify.Resource.Manager.Models.Foundations.Projects.Exceptions;
-using Coolify.Resource.Manager.Services.Foundations.Projects;
+using Coolify.Resource.Manager.Models.Processings.Projects.Exceptions;
+using Coolify.Resource.Manager.Services.Processings.Projects;
 using Xeptions;
 
 namespace Coolify.Resource.Manager.Clients.Projects
@@ -14,34 +14,34 @@ namespace Coolify.Resource.Manager.Clients.Projects
     /// <summary>Provides project and environment management operations.</summary>
     internal class ProjectClient : IProjectClient
     {
-        private readonly IProjectService projectService;
+        private readonly IProjectProcessingService projectProcessingService;
 
-        public ProjectClient(IProjectService projectService) =>
-            this.projectService = projectService;
+        public ProjectClient(IProjectProcessingService projectProcessingService) =>
+            this.projectProcessingService = projectProcessingService;
 
         public async ValueTask<IEnumerable<Project>> RetrieveAllProjectsAsync(
             CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.projectService.RetrieveAllProjectsAsync(cancellationToken);
+                return await this.projectProcessingService.RetrieveAllProjectsAsync(cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -61,24 +61,24 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                return await this.projectService.RetrieveProjectByUuidAsync(projectUuid, cancellationToken);
+                return await this.projectProcessingService.RetrieveProjectByUuidAsync(projectUuid, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -97,24 +97,24 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                return await this.projectService.AddProjectAsync(project, cancellationToken);
+                return await this.projectProcessingService.AddProjectAsync(project, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -133,24 +133,24 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                return await this.projectService.ModifyProjectAsync(project, cancellationToken);
+                return await this.projectProcessingService.ModifyProjectAsync(project, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -169,24 +169,24 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                await this.projectService.RemoveProjectAsync(projectUuid, cancellationToken);
+                await this.projectProcessingService.RemoveProjectAsync(projectUuid, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -206,24 +206,24 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                return await this.projectService.RetrieveAllEnvironmentsAsync(projectUuid, cancellationToken);
+                return await this.projectProcessingService.RetrieveAllEnvironmentsAsync(projectUuid, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -243,24 +243,24 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                return await this.projectService.AddEnvironmentAsync(projectUuid, environment, cancellationToken);
+                return await this.projectProcessingService.AddEnvironmentAsync(projectUuid, environment, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -280,25 +280,25 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                return await this.projectService.RetrieveEnvironmentAsync(
+                return await this.projectProcessingService.RetrieveEnvironmentAsync(
                     projectUuid, environmentNameOrUuid, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
@@ -318,24 +318,24 @@ namespace Coolify.Resource.Manager.Clients.Projects
         {
             try
             {
-                await this.projectService.RemoveEnvironmentAsync(projectUuid, environmentNameOrUuid, cancellationToken);
+                await this.projectProcessingService.RemoveEnvironmentAsync(projectUuid, environmentNameOrUuid, cancellationToken);
             }
-            catch (ProjectValidationException projectValidationException)
+            catch (ProjectProcessingValidationException projectValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyValidationException projectDependencyValidationException)
+            catch (ProjectProcessingDependencyValidationException projectDependencyValidationException)
             {
                 throw CreateProjectClientValidationException(
                     projectDependencyValidationException.InnerException as Xeption);
             }
-            catch (ProjectDependencyException projectDependencyException)
+            catch (ProjectProcessingDependencyException projectDependencyException)
             {
                 throw CreateProjectClientDependencyException(
                     projectDependencyException.InnerException as Xeption);
             }
-            catch (ProjectServiceException projectServiceException)
+            catch (ProjectProcessingServiceException projectServiceException)
             {
                 throw CreateProjectClientDependencyException(
                     projectServiceException.InnerException as Xeption);
