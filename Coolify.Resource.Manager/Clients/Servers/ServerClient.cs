@@ -5,8 +5,8 @@
 
 using Coolify.Resource.Manager.Models.Clients.Servers.Exceptions;
 using Coolify.Resource.Manager.Models.Foundations.Servers;
-using Coolify.Resource.Manager.Models.Foundations.Servers.Exceptions;
-using Coolify.Resource.Manager.Services.Foundations.Servers;
+using Coolify.Resource.Manager.Models.Processings.Servers.Exceptions;
+using Coolify.Resource.Manager.Services.Processings.Servers;
 using Xeptions;
 
 namespace Coolify.Resource.Manager.Clients.Servers
@@ -14,37 +14,37 @@ namespace Coolify.Resource.Manager.Clients.Servers
     /// <summary>Provides server provisioning and management operations.</summary>
     internal class ServerClient : IServerClient
     {
-        private readonly IServerService serverService;
+        private readonly IServerProcessingService serverProcessingService;
 
-        public ServerClient(IServerService serverService) =>
-            this.serverService = serverService;
+        public ServerClient(IServerProcessingService serverProcessingService) =>
+            this.serverProcessingService = serverProcessingService;
 
         public async ValueTask<IEnumerable<Server>> RetrieveAllServersAsync(
             CancellationToken cancellationToken = default)
         {
             try
             {
-                return await this.serverService.RetrieveAllServersAsync(cancellationToken);
+                return await this.serverProcessingService.RetrieveAllServersAsync(cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {
@@ -61,27 +61,27 @@ namespace Coolify.Resource.Manager.Clients.Servers
         {
             try
             {
-                return await this.serverService.RetrieveServerByUuidAsync(serverUuid, cancellationToken);
+                return await this.serverProcessingService.RetrieveServerByUuidAsync(serverUuid, cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {
@@ -97,27 +97,27 @@ namespace Coolify.Resource.Manager.Clients.Servers
         {
             try
             {
-                return await this.serverService.AddServerAsync(server, cancellationToken);
+                return await this.serverProcessingService.AddServerAsync(server, cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {
@@ -133,27 +133,27 @@ namespace Coolify.Resource.Manager.Clients.Servers
         {
             try
             {
-                return await this.serverService.ModifyServerAsync(server, cancellationToken);
+                return await this.serverProcessingService.ModifyServerAsync(server, cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {
@@ -169,27 +169,27 @@ namespace Coolify.Resource.Manager.Clients.Servers
         {
             try
             {
-                await this.serverService.RemoveServerAsync(serverUuid, cancellationToken);
+                await this.serverProcessingService.RemoveServerAsync(serverUuid, cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {
@@ -206,27 +206,27 @@ namespace Coolify.Resource.Manager.Clients.Servers
         {
             try
             {
-                return await this.serverService.RetrieveServerValidationAsync(serverUuid, cancellationToken);
+                return await this.serverProcessingService.RetrieveServerValidationAsync(serverUuid, cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {
@@ -243,27 +243,27 @@ namespace Coolify.Resource.Manager.Clients.Servers
         {
             try
             {
-                return await this.serverService.RetrieveServerResourcesAsync(serverUuid, cancellationToken);
+                return await this.serverProcessingService.RetrieveServerResourcesAsync(serverUuid, cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {
@@ -280,27 +280,27 @@ namespace Coolify.Resource.Manager.Clients.Servers
         {
             try
             {
-                return await this.serverService.RetrieveServerDomainsAsync(serverUuid, cancellationToken);
+                return await this.serverProcessingService.RetrieveServerDomainsAsync(serverUuid, cancellationToken);
             }
-            catch (ServerValidationException serverValidationException)
+            catch (ServerProcessingValidationException serverProcessingValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverValidationException.InnerException as Xeption);
+                    serverProcessingValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyValidationException serverDependencyValidationException)
+            catch (ServerProcessingDependencyValidationException serverProcessingDependencyValidationException)
             {
                 throw CreateServerClientValidationException(
-                    serverDependencyValidationException.InnerException as Xeption);
+                    serverProcessingDependencyValidationException.InnerException as Xeption);
             }
-            catch (ServerDependencyException serverDependencyException)
+            catch (ServerProcessingDependencyException serverProcessingDependencyException)
             {
                 throw CreateServerClientDependencyException(
-                    serverDependencyException.InnerException as Xeption);
+                    serverProcessingDependencyException.InnerException as Xeption);
             }
-            catch (ServerServiceException serverServiceException)
+            catch (ServerProcessingServiceException serverProcessingServiceException)
             {
                 throw CreateServerClientDependencyException(
-                    serverServiceException.InnerException as Xeption);
+                    serverProcessingServiceException.InnerException as Xeption);
             }
             catch (OperationCanceledException)
             {

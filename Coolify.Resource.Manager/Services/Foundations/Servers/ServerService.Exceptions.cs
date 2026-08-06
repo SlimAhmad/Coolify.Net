@@ -84,12 +84,12 @@ namespace Coolify.Resource.Manager.Services.Foundations.Servers
             catch (OperationCanceledException operationCanceledException)
                 when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
             {
-                var failedServerDependencyException =
-                    new FailedServerDependencyException(
-                        message: "Failed server dependency error occurred.",
+                var timeoutServerException =
+                    new TimeoutServerException(
+                        message: "Server dependency timeout error occurred.",
                         innerException: operationCanceledException);
 
-                throw await CreateAndLogDependencyExceptionAsync(failedServerDependencyException);
+                throw await CreateAndLogDependencyExceptionAsync(timeoutServerException);
             }
             catch (OperationCanceledException)
             {
@@ -132,12 +132,12 @@ namespace Coolify.Resource.Manager.Services.Foundations.Servers
             catch (OperationCanceledException operationCanceledException)
                 when (operationCanceledException.CancellationToken.IsCancellationRequested is false)
             {
-                var failedServerDependencyException =
-                    new FailedServerDependencyException(
-                        message: "Failed server dependency error occurred.",
+                var timeoutServerException =
+                    new TimeoutServerException(
+                        message: "Server dependency timeout error occurred.",
                         innerException: operationCanceledException);
 
-                throw await CreateAndLogDependencyExceptionAsync(failedServerDependencyException);
+                throw await CreateAndLogDependencyExceptionAsync(timeoutServerException);
             }
             catch (OperationCanceledException)
             {

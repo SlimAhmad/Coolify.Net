@@ -5,8 +5,8 @@
 
 using Coolify.Resource.Manager.Clients.Servers;
 using Coolify.Resource.Manager.Models.Foundations.Servers;
-using Coolify.Resource.Manager.Models.Foundations.Servers.Exceptions;
-using Coolify.Resource.Manager.Services.Foundations.Servers;
+using Coolify.Resource.Manager.Models.Processings.Servers.Exceptions;
+using Coolify.Resource.Manager.Services.Processings.Servers;
 using Moq;
 using Xeptions;
 using Xunit;
@@ -15,13 +15,13 @@ namespace Coolify.Resource.Manager.Tests.Unit.Clients.Servers
 {
     public partial class ServerClientTests
     {
-        private readonly Mock<IServerService> serverServiceMock;
+        private readonly Mock<IServerProcessingService> serverServiceMock;
         private readonly IServerClient serverClient;
 
         public ServerClientTests()
         {
-            this.serverServiceMock = new Mock<IServerService>();
-            this.serverClient = new ServerClient(serverService: this.serverServiceMock.Object);
+            this.serverServiceMock = new Mock<IServerProcessingService>();
+            this.serverClient = new ServerClient(serverProcessingService: this.serverServiceMock.Object);
         }
 
         private static string GetRandomString() => Guid.NewGuid().ToString();
@@ -43,8 +43,8 @@ namespace Coolify.Resource.Manager.Tests.Unit.Clients.Servers
 
             return new TheoryData<Xeption>
             {
-                new ServerValidationException("test", inner),
-                new ServerDependencyValidationException("test", inner)
+                new ServerProcessingValidationException("test", inner),
+                new ServerProcessingDependencyValidationException("test", inner)
             };
         }
 
@@ -54,8 +54,8 @@ namespace Coolify.Resource.Manager.Tests.Unit.Clients.Servers
 
             return new TheoryData<Xeption>
             {
-                new ServerDependencyException("test", inner),
-                new ServerServiceException("test", inner)
+                new ServerProcessingDependencyException("test", inner),
+                new ServerProcessingServiceException("test", inner)
             };
         }
     }
