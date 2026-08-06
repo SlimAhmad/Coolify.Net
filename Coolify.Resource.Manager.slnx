@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Coolify.Resource.Manager/Coolify.Resource.Manager.csproj" />
+  <Project Path="Coolify.Resource.Manager.Tests.Unit/Coolify.Resource.Manager.Tests.Unit.csproj" />
+</Solution>
