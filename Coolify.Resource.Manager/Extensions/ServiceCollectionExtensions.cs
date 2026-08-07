@@ -7,14 +7,17 @@ using System.Net.Http.Headers;
 using Coolify.Resource.Manager.Brokers.CoolifyApis;
 using Coolify.Resource.Manager.Brokers.Loggings;
 using Coolify.Resource.Manager.Clients.Applications;
+using Coolify.Resource.Manager.Clients.CoolifyServices;
 using Coolify.Resource.Manager.Clients.Databases;
 using Coolify.Resource.Manager.Clients.Projects;
 using Coolify.Resource.Manager.Clients.Servers;
 using Coolify.Resource.Manager.Services.Foundations.Applications;
+using Coolify.Resource.Manager.Services.Foundations.CoolifyServices;
 using Coolify.Resource.Manager.Services.Foundations.Databases;
 using Coolify.Resource.Manager.Services.Foundations.Projects;
 using Coolify.Resource.Manager.Services.Foundations.Servers;
 using Coolify.Resource.Manager.Services.Processings.Applications;
+using Coolify.Resource.Manager.Services.Processings.CoolifyServices;
 using Coolify.Resource.Manager.Services.Processings.Databases;
 using Coolify.Resource.Manager.Services.Processings.Projects;
 using Coolify.Resource.Manager.Services.Processings.Servers;
@@ -56,18 +59,21 @@ namespace Coolify.Resource.Manager.Extensions
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IApplicationService, ApplicationService>();
             services.AddTransient<IDatabaseService, DatabaseService>();
+            services.AddTransient<ICoolifyServiceService, CoolifyServiceService>();
 
             // Processing Services
             services.AddTransient<IServerProcessingService, ServerProcessingService>();
             services.AddTransient<IProjectProcessingService, ProjectProcessingService>();
             services.AddTransient<IApplicationProcessingService, ApplicationProcessingService>();
             services.AddTransient<IDatabaseProcessingService, DatabaseProcessingService>();
+            services.AddTransient<ICoolifyServiceProcessingService, CoolifyServiceProcessingService>();
 
             // Clients (public surface)
             services.AddTransient<IServerClient, ServerClient>();
             services.AddTransient<IProjectClient, ProjectClient>();
             services.AddTransient<IApplicationClient, ApplicationClient>();
             services.AddTransient<IDatabaseClient, DatabaseClient>();
+            services.AddTransient<ICoolifyServiceClient, CoolifyServiceClient>();
 
             return services;
         }
