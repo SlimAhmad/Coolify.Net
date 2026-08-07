@@ -42,6 +42,14 @@ namespace Coolify.Resource.Manager.Brokers.CoolifyApis
             response.EnsureSuccessStatusCode();
         }
 
+        private async ValueTask PostAsync(string relativeUrl, CancellationToken cancellationToken)
+        {
+            HttpResponseMessage response =
+                await this.httpClient.PostAsync(relativeUrl, content: null, cancellationToken);
+
+            response.EnsureSuccessStatusCode();
+        }
+
         private async ValueTask<T> PatchAsync<T>(string relativeUrl, object content, CancellationToken cancellationToken)
             where T : class
         {
