@@ -80,5 +80,13 @@ namespace Coolify.Resource.Manager.Brokers.CoolifyApis
             HttpResponseMessage response = await this.httpClient.DeleteAsync(relativeUrl, cancellationToken);
             response.EnsureSuccessStatusCode();
         }
+
+        private async ValueTask<bool> GetBooleanAsync(string relativeUrl, CancellationToken cancellationToken)
+        {
+            HttpResponseMessage response = await this.httpClient.GetAsync(relativeUrl, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            return true;
+        }
     }
 }

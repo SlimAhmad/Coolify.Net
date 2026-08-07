@@ -13,6 +13,7 @@ using Coolify.Resource.Manager.Clients.Deployments;
 using Coolify.Resource.Manager.Clients.PrivateKeys;
 using Coolify.Resource.Manager.Clients.Projects;
 using Coolify.Resource.Manager.Clients.Servers;
+using Coolify.Resource.Manager.Clients.Systems;
 using Coolify.Resource.Manager.Clients.Teams;
 using Coolify.Resource.Manager.Services.Foundations.Applications;
 using Coolify.Resource.Manager.Services.Foundations.CoolifyServices;
@@ -21,6 +22,7 @@ using Coolify.Resource.Manager.Services.Foundations.Deployments;
 using Coolify.Resource.Manager.Services.Foundations.PrivateKeys;
 using Coolify.Resource.Manager.Services.Foundations.Projects;
 using Coolify.Resource.Manager.Services.Foundations.Servers;
+using Coolify.Resource.Manager.Services.Foundations.Systems;
 using Coolify.Resource.Manager.Services.Foundations.Teams;
 using Coolify.Resource.Manager.Services.Processings.Applications;
 using Coolify.Resource.Manager.Services.Processings.CoolifyServices;
@@ -29,6 +31,7 @@ using Coolify.Resource.Manager.Services.Processings.Deployments;
 using Coolify.Resource.Manager.Services.Processings.PrivateKeys;
 using Coolify.Resource.Manager.Services.Processings.Projects;
 using Coolify.Resource.Manager.Services.Processings.Servers;
+using Coolify.Resource.Manager.Services.Processings.Systems;
 using Coolify.Resource.Manager.Services.Processings.Teams;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -72,6 +75,7 @@ namespace Coolify.Resource.Manager.Extensions
             services.AddTransient<IDeploymentService, DeploymentService>();
             services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<IPrivateKeyService, PrivateKeyService>();
+            services.AddTransient<ISystemService, SystemService>();
 
             // Processing Services
             services.AddTransient<IServerProcessingService, ServerProcessingService>();
@@ -82,6 +86,7 @@ namespace Coolify.Resource.Manager.Extensions
             services.AddTransient<IDeploymentProcessingService, DeploymentProcessingService>();
             services.AddTransient<ITeamProcessingService, TeamProcessingService>();
             services.AddTransient<IPrivateKeyProcessingService, PrivateKeyProcessingService>();
+            services.AddTransient<ISystemProcessingService, SystemProcessingService>();
 
             // Clients (public surface)
             services.AddTransient<IServerClient, ServerClient>();
@@ -92,6 +97,7 @@ namespace Coolify.Resource.Manager.Extensions
             services.AddTransient<IDeploymentClient, DeploymentClient>();
             services.AddTransient<ITeamClient, TeamClient>();
             services.AddTransient<IPrivateKeyClient, PrivateKeyClient>();
+            services.AddTransient<ISystemClient, SystemClient>();
 
             return services;
         }
