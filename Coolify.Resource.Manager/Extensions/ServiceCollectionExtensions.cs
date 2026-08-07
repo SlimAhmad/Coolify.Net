@@ -9,16 +9,19 @@ using Coolify.Resource.Manager.Brokers.Loggings;
 using Coolify.Resource.Manager.Clients.Applications;
 using Coolify.Resource.Manager.Clients.CoolifyServices;
 using Coolify.Resource.Manager.Clients.Databases;
+using Coolify.Resource.Manager.Clients.Deployments;
 using Coolify.Resource.Manager.Clients.Projects;
 using Coolify.Resource.Manager.Clients.Servers;
 using Coolify.Resource.Manager.Services.Foundations.Applications;
 using Coolify.Resource.Manager.Services.Foundations.CoolifyServices;
 using Coolify.Resource.Manager.Services.Foundations.Databases;
+using Coolify.Resource.Manager.Services.Foundations.Deployments;
 using Coolify.Resource.Manager.Services.Foundations.Projects;
 using Coolify.Resource.Manager.Services.Foundations.Servers;
 using Coolify.Resource.Manager.Services.Processings.Applications;
 using Coolify.Resource.Manager.Services.Processings.CoolifyServices;
 using Coolify.Resource.Manager.Services.Processings.Databases;
+using Coolify.Resource.Manager.Services.Processings.Deployments;
 using Coolify.Resource.Manager.Services.Processings.Projects;
 using Coolify.Resource.Manager.Services.Processings.Servers;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,6 +63,7 @@ namespace Coolify.Resource.Manager.Extensions
             services.AddTransient<IApplicationService, ApplicationService>();
             services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddTransient<ICoolifyServiceService, CoolifyServiceService>();
+            services.AddTransient<IDeploymentService, DeploymentService>();
 
             // Processing Services
             services.AddTransient<IServerProcessingService, ServerProcessingService>();
@@ -67,6 +71,7 @@ namespace Coolify.Resource.Manager.Extensions
             services.AddTransient<IApplicationProcessingService, ApplicationProcessingService>();
             services.AddTransient<IDatabaseProcessingService, DatabaseProcessingService>();
             services.AddTransient<ICoolifyServiceProcessingService, CoolifyServiceProcessingService>();
+            services.AddTransient<IDeploymentProcessingService, DeploymentProcessingService>();
 
             // Clients (public surface)
             services.AddTransient<IServerClient, ServerClient>();
@@ -74,6 +79,7 @@ namespace Coolify.Resource.Manager.Extensions
             services.AddTransient<IApplicationClient, ApplicationClient>();
             services.AddTransient<IDatabaseClient, DatabaseClient>();
             services.AddTransient<ICoolifyServiceClient, CoolifyServiceClient>();
+            services.AddTransient<IDeploymentClient, DeploymentClient>();
 
             return services;
         }
