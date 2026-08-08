@@ -19,7 +19,9 @@ namespace Coolify.Net.Services.Foundations.Databases
         }
 
         private void ValidateDatabaseUuid(string databaseUuid) =>
-            Validate((IsInvalid(databaseUuid), nameof(databaseUuid)));
+            Validate(
+                message: "Invalid database. Please fix the errors and try again.",
+                (Rule: IsInvalid(databaseUuid), Parameter: nameof(databaseUuid)));
 
         private static void ValidateBackupIsNotNull(DatabaseBackup backup)
         {
@@ -30,10 +32,14 @@ namespace Coolify.Net.Services.Foundations.Databases
         }
 
         private void ValidateBackupUuid(string backupUuid) =>
-            Validate((IsInvalid(backupUuid), nameof(backupUuid)));
+            Validate(
+                message: "Invalid database. Please fix the errors and try again.",
+                (Rule: IsInvalid(backupUuid), Parameter: nameof(backupUuid)));
 
         private void ValidateExecutionUuid(string executionUuid) =>
-            Validate((IsInvalid(executionUuid), nameof(executionUuid)));
+            Validate(
+                message: "Invalid database. Please fix the errors and try again.",
+                (Rule: IsInvalid(executionUuid), Parameter: nameof(executionUuid)));
 
         private static dynamic IsInvalid(string text) => new
         {
@@ -41,11 +47,9 @@ namespace Coolify.Net.Services.Foundations.Databases
             Message = "Text is required"
         };
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate(string message, params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidDatabaseException =
-                new InvalidDatabaseException(
-                    message: "Invalid database. Please fix the errors and try again.");
+            var invalidDatabaseException = new InvalidDatabaseException(message);
 
             foreach ((dynamic rule, string parameter) in validations)
             {

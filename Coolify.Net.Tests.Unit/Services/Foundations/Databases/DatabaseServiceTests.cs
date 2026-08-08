@@ -4,12 +4,15 @@
 // ---------------------------------------------------------------
 
 using System.Net;
+using System.Linq.Expressions;
 using Coolify.Net.Brokers.CoolifyApis;
 using Coolify.Net.Brokers.Loggings;
 using Coolify.Net.Models.Externals.Databases;
 using Coolify.Net.Models.Foundations.Databases;
+using Coolify.Net.Models.Foundations.Databases.Exceptions;
 using Coolify.Net.Services.Foundations.Databases;
 using Moq;
+using Xeptions;
 
 namespace Coolify.Net.Tests.Unit.Services.Foundations.Databases
 {
@@ -130,33 +133,60 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Databases
                 UpdatedAt = DateTimeOffset.UtcNow
             };
 
-        public static TheoryData<HttpStatusCode> DependencyValidationHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.Conflict
-            };
-
-        public static TheoryData<HttpStatusCode> CriticalDependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.Unauthorized,
-                HttpStatusCode.Forbidden,
-                HttpStatusCode.NotFound
-            };
-
-        public static TheoryData<HttpStatusCode> DependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.TooManyRequests,
-                HttpStatusCode.ServiceUnavailable,
-                HttpStatusCode.InternalServerError
-            };
-
         private static HttpRequestException CreateHttpRequestException(HttpStatusCode statusCode) =>
             new HttpRequestException(
                 message: "HTTP error occurred.",
                 inner: null,
                 statusCode: statusCode);
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static DatabaseDependencyValidationException CreateInvalidDatabaseDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var invalidDatabaseException = new InvalidDatabaseException(
+                message: "Invalid database.",
+                innerException: httpRequestException);
+
+            return new DatabaseDependencyValidationException(
+                message: "Database dependency validation error occurred, fix the errors and try again.",
+                innerException: invalidDatabaseException);
+        }
+
+        private static DatabaseDependencyValidationException CreateAlreadyExistsDatabaseDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var alreadyExistsDatabaseException = new AlreadyExistsDatabaseException(
+                message: "Database already exists.",
+                innerException: httpRequestException);
+
+            return new DatabaseDependencyValidationException(
+                message: "Database dependency validation error occurred, fix the errors and try again.",
+                innerException: alreadyExistsDatabaseException);
+        }
+
+        private static DatabaseDependencyException CreateFailedDatabaseDependencyException(
+            HttpRequestException httpRequestException)
+        {
+            var failedDatabaseDependencyException = new FailedDatabaseDependencyException(
+                message: "Failed database dependency error occurred.",
+                innerException: httpRequestException);
+
+            return new DatabaseDependencyException(
+                message: "Database dependency error occurred, contact support.",
+                innerException: failedDatabaseDependencyException);
+        }
+
+        private static DatabaseServiceException CreateFailedDatabaseServiceException(Exception exception)
+        {
+            var failedDatabaseServiceException = new FailedDatabaseServiceException(
+                message: "Failed database service error occurred.",
+                innerException: exception);
+
+            return new DatabaseServiceException(
+                message: "Database service error occurred, contact support.",
+                innerException: failedDatabaseServiceException);
+        }
     }
 }

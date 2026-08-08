@@ -5,6 +5,7 @@
 
 using System.Net;
 using Coolify.Net.Models.Foundations.Servers.Exceptions;
+using FluentAssertions;
 using Moq;
 
 namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
@@ -20,12 +21,15 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
         [InlineData(HttpStatusCode.TooManyRequests)]
         [InlineData(HttpStatusCode.InternalServerError)]
         [InlineData(HttpStatusCode.ServiceUnavailable)]
-        public async Task ShouldThrowDependencyExceptionOnRemoveWhenHttpErrorOccursAsync(
+        public async Task ShouldThrowDependencyExceptionOnRemoveIfHttpErrorOccursAndLogItAsync(
             HttpStatusCode statusCode)
         {
             // given
             string someServerUuid = GetRandomString();
             HttpRequestException httpRequestException = CreateHttpRequestException(statusCode);
+
+            ServerDependencyException expectedServerDependencyException =
+                CreateFailedServerDependencyException(httpRequestException);
 
             this.coolifyApiBrokerMock
                 .Setup(broker => broker.DeleteServerAsync(someServerUuid))
@@ -35,25 +39,33 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
             ValueTask removeServerTask =
                 this.serverService.RemoveServerAsync(someServerUuid);
 
+            ServerDependencyException actualServerDependencyException =
+                await Assert.ThrowsAsync<ServerDependencyException>(removeServerTask.AsTask);
+
             // then
-            await Assert.ThrowsAsync<ServerDependencyException>(removeServerTask.AsTask);
+            actualServerDependencyException.Should()
+                .BeEquivalentTo(expectedServerDependencyException);
 
             this.coolifyApiBrokerMock.Verify(
                 broker => broker.DeleteServerAsync(someServerUuid), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogErrorAsync(It.IsAny<Exception>()), Times.Once);
+                broker.LogErrorAsync(It.Is(SameExceptionAs(expectedServerDependencyException))),
+                    Times.Once);
 
             this.coolifyApiBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRemoveWhenExceptionOccursAsync()
+        public async Task ShouldThrowServiceExceptionOnRemoveIfServiceErrorOccursAndLogItAsync()
         {
             // given
             string someServerUuid = GetRandomString();
             var exception = new Exception("Unexpected error.");
+
+            ServerServiceException expectedServerServiceException =
+                CreateFailedServerServiceException(exception);
 
             this.coolifyApiBrokerMock
                 .Setup(broker => broker.DeleteServerAsync(someServerUuid))
@@ -63,14 +75,19 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
             ValueTask removeServerTask =
                 this.serverService.RemoveServerAsync(someServerUuid);
 
+            ServerServiceException actualServerServiceException =
+                await Assert.ThrowsAsync<ServerServiceException>(removeServerTask.AsTask);
+
             // then
-            await Assert.ThrowsAsync<ServerServiceException>(removeServerTask.AsTask);
+            actualServerServiceException.Should()
+                .BeEquivalentTo(expectedServerServiceException);
 
             this.coolifyApiBrokerMock.Verify(
                 broker => broker.DeleteServerAsync(someServerUuid), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogErrorAsync(It.IsAny<Exception>()), Times.Once);
+                broker.LogErrorAsync(It.Is(SameExceptionAs(expectedServerServiceException))),
+                    Times.Once);
 
             this.coolifyApiBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

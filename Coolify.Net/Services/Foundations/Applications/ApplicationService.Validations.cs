@@ -16,19 +16,25 @@ namespace Coolify.Net.Services.Foundations.Applications
             ValidateApplicationIsNotNull(application);
 
             Validate(
-                (IsInvalid(application.Name), nameof(Application.Name)),
-                (IsInvalid(application.ServerUuid), nameof(Application.ServerUuid)),
-                (IsInvalid(application.ProjectUuid), nameof(Application.ProjectUuid)));
+                message: "Invalid application. Please fix the errors and try again.",
+
+                (Rule: IsInvalid(application.Name), Parameter: nameof(Application.Name)),
+                (Rule: IsInvalid(application.ServerUuid), Parameter: nameof(Application.ServerUuid)),
+                (Rule: IsInvalid(application.ProjectUuid), Parameter: nameof(Application.ProjectUuid)));
         }
 
         private void ValidateApplicationUuid(string applicationUuid) =>
-            Validate((IsInvalid(applicationUuid), nameof(applicationUuid)));
+            Validate(
+                message: "Invalid application. Please fix the errors and try again.",
+                (Rule: IsInvalid(applicationUuid), Parameter: nameof(applicationUuid)));
 
         private void ValidateEnvironmentVariable(EnvironmentVariable environmentVariable)
         {
             ValidateEnvironmentVariableIsNotNull(environmentVariable);
 
-            Validate((IsInvalid(environmentVariable.Key), nameof(EnvironmentVariable.Key)));
+            Validate(
+                message: "Invalid application. Please fix the errors and try again.",
+                (Rule: IsInvalid(environmentVariable.Key), Parameter: nameof(EnvironmentVariable.Key)));
         }
 
         private void ValidateEnvironmentVariables(IEnumerable<EnvironmentVariable> environmentVariables)
@@ -45,7 +51,9 @@ namespace Coolify.Net.Services.Foundations.Applications
         }
 
         private void ValidateEnvironmentVariableUuid(string environmentVariableUuid) =>
-            Validate((IsInvalid(environmentVariableUuid), nameof(environmentVariableUuid)));
+            Validate(
+                message: "Invalid application. Please fix the errors and try again.",
+                (Rule: IsInvalid(environmentVariableUuid), Parameter: nameof(environmentVariableUuid)));
 
         private static void ValidateApplicationIsNotNull(Application application)
         {
@@ -69,11 +77,9 @@ namespace Coolify.Net.Services.Foundations.Applications
             Message = "Text is required"
         };
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate(string message, params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidApplicationException =
-                new InvalidApplicationException(
-                    message: "Invalid application. Please fix the errors and try again.");
+            var invalidApplicationException = new InvalidApplicationException(message);
 
             foreach ((dynamic rule, string parameter) in validations)
             {

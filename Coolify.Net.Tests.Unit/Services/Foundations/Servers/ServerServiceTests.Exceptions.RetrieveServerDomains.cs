@@ -5,20 +5,22 @@
 
 using System.Net;
 using Coolify.Net.Models.Foundations.Servers.Exceptions;
+using FluentAssertions;
 using Moq;
 
 namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
 {
     public partial class ServerServiceTests
     {
-        [Theory]
-        [MemberData(nameof(DependencyValidationHttpStatusCodes))]
-        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveDomainsWhenHttpErrorOccursAsync(
-            HttpStatusCode statusCode)
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveDomainsIfBadRequestErrorOccursAndLogItAsync()
         {
             // given
             string someServerUuid = GetRandomString();
-            HttpRequestException httpRequestException = CreateHttpRequestException(statusCode);
+            HttpRequestException httpRequestException = CreateHttpRequestException(HttpStatusCode.BadRequest);
+
+            ServerDependencyValidationException expectedServerDependencyValidationException =
+                CreateInvalidServerDependencyValidationException(httpRequestException);
 
             this.coolifyApiBrokerMock
                 .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
@@ -28,86 +30,150 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
             ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
                 this.serverService.RetrieveServerDomainsAsync(someServerUuid);
 
+            ServerDependencyValidationException actualServerDependencyValidationException =
+                await Assert.ThrowsAsync<ServerDependencyValidationException>(retrieveServerDomainsTask.AsTask);
+
             // then
-            await Assert.ThrowsAsync<ServerDependencyValidationException>(retrieveServerDomainsTask.AsTask);
+            actualServerDependencyValidationException.Should()
+                .BeEquivalentTo(expectedServerDependencyValidationException);
 
             this.coolifyApiBrokerMock.Verify(
                 broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogErrorAsync(It.IsAny<Exception>()), Times.Once);
-
-            this.coolifyApiBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
-        }
-
-        [Theory]
-        [MemberData(nameof(CriticalDependencyHttpStatusCodes))]
-        public async Task ShouldThrowCriticalDependencyExceptionOnRetrieveDomainsWhenHttpErrorOccursAsync(
-            HttpStatusCode statusCode)
-        {
-            // given
-            string someServerUuid = GetRandomString();
-            HttpRequestException httpRequestException = CreateHttpRequestException(statusCode);
-
-            this.coolifyApiBrokerMock
-                .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
-                .ThrowsAsync(httpRequestException);
-
-            // when
-            ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
-                this.serverService.RetrieveServerDomainsAsync(someServerUuid);
-
-            // then
-            await Assert.ThrowsAsync<ServerDependencyException>(retrieveServerDomainsTask.AsTask);
-
-            this.coolifyApiBrokerMock.Verify(
-                broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogCriticalAsync(It.IsAny<Exception>()), Times.Once);
-
-            this.coolifyApiBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
-        }
-
-        [Theory]
-        [MemberData(nameof(DependencyHttpStatusCodes))]
-        public async Task ShouldThrowDependencyExceptionOnRetrieveDomainsWhenHttpErrorOccursAsync(
-            HttpStatusCode statusCode)
-        {
-            // given
-            string someServerUuid = GetRandomString();
-            HttpRequestException httpRequestException = CreateHttpRequestException(statusCode);
-
-            this.coolifyApiBrokerMock
-                .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
-                .ThrowsAsync(httpRequestException);
-
-            // when
-            ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
-                this.serverService.RetrieveServerDomainsAsync(someServerUuid);
-
-            // then
-            await Assert.ThrowsAsync<ServerDependencyException>(retrieveServerDomainsTask.AsTask);
-
-            this.coolifyApiBrokerMock.Verify(
-                broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogErrorAsync(It.IsAny<Exception>()), Times.Once);
+                broker.LogErrorAsync(It.Is(SameExceptionAs(expectedServerDependencyValidationException))),
+                    Times.Once);
 
             this.coolifyApiBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowCriticalDependencyExceptionOnRetrieveDomainsWhenHttpRequestExceptionHasNoStatusCodeAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveDomainsIfConflictErrorOccursAndLogItAsync()
+        {
+            // given
+            string someServerUuid = GetRandomString();
+            HttpRequestException httpRequestException = CreateHttpRequestException(HttpStatusCode.Conflict);
+
+            ServerDependencyValidationException expectedServerDependencyValidationException =
+                CreateAlreadyExistsServerDependencyValidationException(httpRequestException);
+
+            this.coolifyApiBrokerMock
+                .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
+                .ThrowsAsync(httpRequestException);
+
+            // when
+            ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
+                this.serverService.RetrieveServerDomainsAsync(someServerUuid);
+
+            ServerDependencyValidationException actualServerDependencyValidationException =
+                await Assert.ThrowsAsync<ServerDependencyValidationException>(retrieveServerDomainsTask.AsTask);
+
+            // then
+            actualServerDependencyValidationException.Should()
+                .BeEquivalentTo(expectedServerDependencyValidationException);
+
+            this.coolifyApiBrokerMock.Verify(
+                broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogErrorAsync(It.Is(SameExceptionAs(expectedServerDependencyValidationException))),
+                    Times.Once);
+
+            this.coolifyApiBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData(HttpStatusCode.Unauthorized)]
+        [InlineData(HttpStatusCode.Forbidden)]
+        [InlineData(HttpStatusCode.NotFound)]
+        public async Task ShouldThrowCriticalDependencyExceptionOnRetrieveDomainsIfCriticalErrorOccursAndLogItAsync(
+            HttpStatusCode statusCode)
+        {
+            // given
+            string someServerUuid = GetRandomString();
+            HttpRequestException httpRequestException = CreateHttpRequestException(statusCode);
+
+            ServerDependencyException expectedServerDependencyException =
+                CreateFailedServerDependencyException(httpRequestException);
+
+            this.coolifyApiBrokerMock
+                .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
+                .ThrowsAsync(httpRequestException);
+
+            // when
+            ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
+                this.serverService.RetrieveServerDomainsAsync(someServerUuid);
+
+            ServerDependencyException actualServerDependencyException =
+                await Assert.ThrowsAsync<ServerDependencyException>(retrieveServerDomainsTask.AsTask);
+
+            // then
+            actualServerDependencyException.Should()
+                .BeEquivalentTo(expectedServerDependencyException);
+
+            this.coolifyApiBrokerMock.Verify(
+                broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCriticalAsync(It.Is(SameExceptionAs(expectedServerDependencyException))),
+                    Times.Once);
+
+            this.coolifyApiBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData(HttpStatusCode.TooManyRequests)]
+        [InlineData(HttpStatusCode.ServiceUnavailable)]
+        [InlineData(HttpStatusCode.InternalServerError)]
+        public async Task ShouldThrowDependencyExceptionOnRetrieveDomainsIfNonCriticalErrorOccursAndLogItAsync(
+            HttpStatusCode statusCode)
+        {
+            // given
+            string someServerUuid = GetRandomString();
+            HttpRequestException httpRequestException = CreateHttpRequestException(statusCode);
+
+            ServerDependencyException expectedServerDependencyException =
+                CreateFailedServerDependencyException(httpRequestException);
+
+            this.coolifyApiBrokerMock
+                .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
+                .ThrowsAsync(httpRequestException);
+
+            // when
+            ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
+                this.serverService.RetrieveServerDomainsAsync(someServerUuid);
+
+            ServerDependencyException actualServerDependencyException =
+                await Assert.ThrowsAsync<ServerDependencyException>(retrieveServerDomainsTask.AsTask);
+
+            // then
+            actualServerDependencyException.Should()
+                .BeEquivalentTo(expectedServerDependencyException);
+
+            this.coolifyApiBrokerMock.Verify(
+                broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogErrorAsync(It.Is(SameExceptionAs(expectedServerDependencyException))),
+                    Times.Once);
+
+            this.coolifyApiBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowCriticalDependencyExceptionOnRetrieveDomainsIfHttpRequestExceptionHasNoStatusCodeAndLogItAsync()
         {
             // given
             string someServerUuid = GetRandomString();
             var httpRequestException = new HttpRequestException("Network failure.");
 
+            ServerDependencyException expectedServerDependencyException =
+                CreateFailedServerDependencyException(httpRequestException);
+
             this.coolifyApiBrokerMock
                 .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
                 .ThrowsAsync(httpRequestException);
@@ -116,25 +182,33 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
             ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
                 this.serverService.RetrieveServerDomainsAsync(someServerUuid);
 
+            ServerDependencyException actualServerDependencyException =
+                await Assert.ThrowsAsync<ServerDependencyException>(retrieveServerDomainsTask.AsTask);
+
             // then
-            await Assert.ThrowsAsync<ServerDependencyException>(retrieveServerDomainsTask.AsTask);
+            actualServerDependencyException.Should()
+                .BeEquivalentTo(expectedServerDependencyException);
 
             this.coolifyApiBrokerMock.Verify(
                 broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogCriticalAsync(It.IsAny<Exception>()), Times.Once);
+                broker.LogCriticalAsync(It.Is(SameExceptionAs(expectedServerDependencyException))),
+                    Times.Once);
 
             this.coolifyApiBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRetrieveDomainsWhenExceptionOccursAsync()
+        public async Task ShouldThrowServiceExceptionOnRetrieveDomainsIfServiceErrorOccursAndLogItAsync()
         {
             // given
             string someServerUuid = GetRandomString();
             var exception = new Exception("Unexpected error.");
+
+            ServerServiceException expectedServerServiceException =
+                CreateFailedServerServiceException(exception);
 
             this.coolifyApiBrokerMock
                 .Setup(broker => broker.GetServerDomainsAsync(someServerUuid))
@@ -144,14 +218,19 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Servers
             ValueTask<IEnumerable<string>> retrieveServerDomainsTask =
                 this.serverService.RetrieveServerDomainsAsync(someServerUuid);
 
+            ServerServiceException actualServerServiceException =
+                await Assert.ThrowsAsync<ServerServiceException>(retrieveServerDomainsTask.AsTask);
+
             // then
-            await Assert.ThrowsAsync<ServerServiceException>(retrieveServerDomainsTask.AsTask);
+            actualServerServiceException.Should()
+                .BeEquivalentTo(expectedServerServiceException);
 
             this.coolifyApiBrokerMock.Verify(
                 broker => broker.GetServerDomainsAsync(someServerUuid), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogErrorAsync(It.IsAny<Exception>()), Times.Once);
+                broker.LogErrorAsync(It.Is(SameExceptionAs(expectedServerServiceException))),
+                    Times.Once);
 
             this.coolifyApiBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

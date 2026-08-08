@@ -3,15 +3,18 @@
 // FREE TO USE TO CONNECT THE WORLD
 // ---------------------------------------------------------------
 
+using System.Linq.Expressions;
 using System.Net;
 using Coolify.Net.Brokers.CoolifyApis;
 using Coolify.Net.Brokers.Loggings;
 using Coolify.Net.Models.Externals.Applications;
 using Coolify.Net.Models.Externals.EnvironmentVariables;
 using Coolify.Net.Models.Foundations.Applications;
+using Coolify.Net.Models.Foundations.Applications.Exceptions;
 using Coolify.Net.Models.Foundations.EnvironmentVariables;
 using Coolify.Net.Services.Foundations.Applications;
 using Moq;
+using Xeptions;
 
 namespace Coolify.Net.Tests.Unit.Services.Foundations.Applications
 {
@@ -151,33 +154,60 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Applications
                     UpdatedAt = externalEnvironmentVariable.UpdatedAt
                 };
 
-        public static TheoryData<HttpStatusCode> DependencyValidationHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.Conflict
-            };
-
-        public static TheoryData<HttpStatusCode> CriticalDependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.Unauthorized,
-                HttpStatusCode.Forbidden,
-                HttpStatusCode.NotFound
-            };
-
-        public static TheoryData<HttpStatusCode> DependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.TooManyRequests,
-                HttpStatusCode.ServiceUnavailable,
-                HttpStatusCode.InternalServerError
-            };
-
         private static HttpRequestException CreateHttpRequestException(HttpStatusCode statusCode) =>
             new HttpRequestException(
                 message: "HTTP error occurred.",
                 inner: null,
                 statusCode: statusCode);
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static ApplicationDependencyValidationException CreateInvalidApplicationDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var invalidApplicationException = new InvalidApplicationException(
+                message: "Invalid application.",
+                innerException: httpRequestException);
+
+            return new ApplicationDependencyValidationException(
+                message: "Application dependency validation error occurred, fix the errors and try again.",
+                innerException: invalidApplicationException);
+        }
+
+        private static ApplicationDependencyValidationException CreateAlreadyExistsApplicationDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var alreadyExistsApplicationException = new AlreadyExistsApplicationException(
+                message: "Application already exists.",
+                innerException: httpRequestException);
+
+            return new ApplicationDependencyValidationException(
+                message: "Application dependency validation error occurred, fix the errors and try again.",
+                innerException: alreadyExistsApplicationException);
+        }
+
+        private static ApplicationDependencyException CreateFailedApplicationDependencyException(
+            HttpRequestException httpRequestException)
+        {
+            var failedApplicationDependencyException = new FailedApplicationDependencyException(
+                message: "Failed application dependency error occurred.",
+                innerException: httpRequestException);
+
+            return new ApplicationDependencyException(
+                message: "Application dependency error occurred, contact support.",
+                innerException: failedApplicationDependencyException);
+        }
+
+        private static ApplicationServiceException CreateFailedApplicationServiceException(Exception exception)
+        {
+            var failedApplicationServiceException = new FailedApplicationServiceException(
+                message: "Failed application service error occurred.",
+                innerException: exception);
+
+            return new ApplicationServiceException(
+                message: "Application service error occurred, contact support.",
+                innerException: failedApplicationServiceException);
+        }
     }
 }

@@ -14,21 +14,29 @@ namespace Coolify.Net.Services.Foundations.Projects
         {
             ValidateProjectIsNotNull(project);
 
-            Validate((IsInvalid(project.Name), nameof(Project.Name)));
+            Validate(
+                message: "Invalid project. Please fix the errors and try again.",
+                (Rule: IsInvalid(project.Name), Parameter: nameof(Project.Name)));
         }
 
         private void ValidateProjectUuid(string projectUuid) =>
-            Validate((IsInvalid(projectUuid), nameof(projectUuid)));
+            Validate(
+                message: "Invalid project. Please fix the errors and try again.",
+                (Rule: IsInvalid(projectUuid), Parameter: nameof(projectUuid)));
 
         private void ValidateEnvironment(CoolifyEnvironment environment)
         {
             ValidateEnvironmentIsNotNull(environment);
 
-            Validate((IsInvalid(environment.Name), nameof(CoolifyEnvironment.Name)));
+            Validate(
+                message: "Invalid project. Please fix the errors and try again.",
+                (Rule: IsInvalid(environment.Name), Parameter: nameof(CoolifyEnvironment.Name)));
         }
 
         private void ValidateEnvironmentNameOrUuid(string environmentNameOrUuid) =>
-            Validate((IsInvalid(environmentNameOrUuid), nameof(environmentNameOrUuid)));
+            Validate(
+                message: "Invalid project. Please fix the errors and try again.",
+                (Rule: IsInvalid(environmentNameOrUuid), Parameter: nameof(environmentNameOrUuid)));
 
         private static void ValidateProjectIsNotNull(Project project)
         {
@@ -52,11 +60,9 @@ namespace Coolify.Net.Services.Foundations.Projects
             Message = "Text is required"
         };
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate(string message, params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidProjectException =
-                new InvalidProjectException(
-                    message: "Invalid project. Please fix the errors and try again.");
+            var invalidProjectException = new InvalidProjectException(message);
 
             foreach ((dynamic rule, string parameter) in validations)
             {

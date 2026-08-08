@@ -3,15 +3,18 @@
 // FREE TO USE TO CONNECT THE WORLD
 // ---------------------------------------------------------------
 
+using System.Linq.Expressions;
 using System.Net;
 using Coolify.Net.Brokers.CoolifyApis;
 using Coolify.Net.Brokers.Loggings;
 using Coolify.Net.Models.Externals.CoolifyServices;
 using Coolify.Net.Models.Externals.EnvironmentVariables;
 using Coolify.Net.Models.Foundations.CoolifyServices;
+using Coolify.Net.Models.Foundations.CoolifyServices.Exceptions;
 using Coolify.Net.Models.Foundations.EnvironmentVariables;
 using Coolify.Net.Services.Foundations.CoolifyServices;
 using Moq;
+using Xeptions;
 
 namespace Coolify.Net.Tests.Unit.Services.Foundations.CoolifyServices
 {
@@ -127,33 +130,60 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.CoolifyServices
                     UpdatedAt = externalEnvironmentVariable.UpdatedAt
                 };
 
-        public static TheoryData<HttpStatusCode> DependencyValidationHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.Conflict
-            };
-
-        public static TheoryData<HttpStatusCode> CriticalDependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.Unauthorized,
-                HttpStatusCode.Forbidden,
-                HttpStatusCode.NotFound
-            };
-
-        public static TheoryData<HttpStatusCode> DependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.TooManyRequests,
-                HttpStatusCode.ServiceUnavailable,
-                HttpStatusCode.InternalServerError
-            };
-
         private static HttpRequestException CreateHttpRequestException(HttpStatusCode statusCode) =>
             new HttpRequestException(
                 message: "HTTP error occurred.",
                 inner: null,
                 statusCode: statusCode);
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static CoolifyServiceDependencyValidationException
+            CreateInvalidCoolifyServiceDependencyValidationException(HttpRequestException httpRequestException)
+        {
+            var invalidCoolifyServiceException = new InvalidCoolifyServiceException(
+                message: "Invalid service.",
+                innerException: httpRequestException);
+
+            return new CoolifyServiceDependencyValidationException(
+                message: "Service dependency validation error occurred, fix the errors and try again.",
+                innerException: invalidCoolifyServiceException);
+        }
+
+        private static CoolifyServiceDependencyValidationException
+            CreateAlreadyExistsCoolifyServiceDependencyValidationException(HttpRequestException httpRequestException)
+        {
+            var alreadyExistsCoolifyServiceException = new AlreadyExistsCoolifyServiceException(
+                message: "Service already exists.",
+                innerException: httpRequestException);
+
+            return new CoolifyServiceDependencyValidationException(
+                message: "Service dependency validation error occurred, fix the errors and try again.",
+                innerException: alreadyExistsCoolifyServiceException);
+        }
+
+        private static CoolifyServiceDependencyException CreateFailedCoolifyServiceDependencyException(
+            HttpRequestException httpRequestException)
+        {
+            var failedCoolifyServiceDependencyException = new FailedCoolifyServiceDependencyException(
+                message: "Failed service dependency error occurred.",
+                innerException: httpRequestException);
+
+            return new CoolifyServiceDependencyException(
+                message: "Service dependency error occurred, contact support.",
+                innerException: failedCoolifyServiceDependencyException);
+        }
+
+        private static CoolifyServiceServiceException CreateFailedCoolifyServiceServiceException(Exception exception)
+        {
+            var failedCoolifyServiceServiceException = new FailedCoolifyServiceServiceException(
+                message: "Failed service error occurred.",
+                innerException: exception);
+
+            return new CoolifyServiceServiceException(
+                message: "Service error occurred, contact support.",
+                innerException: failedCoolifyServiceServiceException);
+        }
     }
 }

@@ -10,7 +10,9 @@ namespace Coolify.Net.Services.Foundations.Teams
     public partial class TeamService
     {
         private void ValidateTeamId(int id) =>
-            Validate((IsInvalid(id), nameof(id)));
+            Validate(
+                message: "Invalid team. Please fix the errors and try again.",
+                (Rule: IsInvalid(id), Parameter: nameof(id)));
 
         private static dynamic IsInvalid(int id) => new
         {
@@ -18,11 +20,9 @@ namespace Coolify.Net.Services.Foundations.Teams
             Message = "Id is required"
         };
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate(string message, params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidTeamException =
-                new InvalidTeamException(
-                    message: "Invalid team. Please fix the errors and try again.");
+            var invalidTeamException = new InvalidTeamException(message);
 
             foreach ((dynamic rule, string parameter) in validations)
             {

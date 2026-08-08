@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\..\..\..\Downloads\Coolify.Net.png" Link="Coolify.Net.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Coolify.Net.Tests.Unit" />
   </ItemGroup>
 

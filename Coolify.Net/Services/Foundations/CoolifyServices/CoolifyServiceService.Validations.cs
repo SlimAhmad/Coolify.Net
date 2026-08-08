@@ -16,19 +16,25 @@ namespace Coolify.Net.Services.Foundations.CoolifyServices
             ValidateCoolifyServiceIsNotNull(service);
 
             Validate(
-                (IsInvalid(service.Name), nameof(CoolifyService.Name)),
-                (IsInvalid(service.ServerUuid), nameof(CoolifyService.ServerUuid)),
-                (IsInvalid(service.ProjectUuid), nameof(CoolifyService.ProjectUuid)));
+                message: "Invalid service. Please fix the errors and try again.",
+
+                (Rule: IsInvalid(service.Name), Parameter: nameof(CoolifyService.Name)),
+                (Rule: IsInvalid(service.ServerUuid), Parameter: nameof(CoolifyService.ServerUuid)),
+                (Rule: IsInvalid(service.ProjectUuid), Parameter: nameof(CoolifyService.ProjectUuid)));
         }
 
         private void ValidateServiceUuid(string serviceUuid) =>
-            Validate((IsInvalid(serviceUuid), nameof(serviceUuid)));
+            Validate(
+                message: "Invalid service. Please fix the errors and try again.",
+                (Rule: IsInvalid(serviceUuid), Parameter: nameof(serviceUuid)));
 
         private void ValidateEnvironmentVariable(EnvironmentVariable environmentVariable)
         {
             ValidateEnvironmentVariableIsNotNull(environmentVariable);
 
-            Validate((IsInvalid(environmentVariable.Key), nameof(EnvironmentVariable.Key)));
+            Validate(
+                message: "Invalid service. Please fix the errors and try again.",
+                (Rule: IsInvalid(environmentVariable.Key), Parameter: nameof(EnvironmentVariable.Key)));
         }
 
         private void ValidateEnvironmentVariables(IEnumerable<EnvironmentVariable> environmentVariables)
@@ -45,7 +51,9 @@ namespace Coolify.Net.Services.Foundations.CoolifyServices
         }
 
         private void ValidateEnvironmentVariableUuid(string environmentVariableUuid) =>
-            Validate((IsInvalid(environmentVariableUuid), nameof(environmentVariableUuid)));
+            Validate(
+                message: "Invalid service. Please fix the errors and try again.",
+                (Rule: IsInvalid(environmentVariableUuid), Parameter: nameof(environmentVariableUuid)));
 
         private static void ValidateCoolifyServiceIsNotNull(CoolifyService service)
         {
@@ -69,11 +77,9 @@ namespace Coolify.Net.Services.Foundations.CoolifyServices
             Message = "Text is required"
         };
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate(string message, params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidCoolifyServiceException =
-                new InvalidCoolifyServiceException(
-                    message: "Invalid service. Please fix the errors and try again.");
+            var invalidCoolifyServiceException = new InvalidCoolifyServiceException(message);
 
             foreach ((dynamic rule, string parameter) in validations)
             {

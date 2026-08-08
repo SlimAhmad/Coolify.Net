@@ -15,13 +15,17 @@ namespace Coolify.Net.Services.Foundations.Servers
             ValidateServerIsNotNull(server);
 
             Validate(
-                (IsInvalid(server.Name), nameof(Server.Name)),
-                (IsInvalid(server.Ip), nameof(Server.Ip)),
-                (IsInvalid(server.User), nameof(Server.User)));
+                message: "Invalid server. Please fix the errors and try again.",
+
+                (Rule: IsInvalid(server.Name), Parameter: nameof(Server.Name)),
+                (Rule: IsInvalid(server.Ip), Parameter: nameof(Server.Ip)),
+                (Rule: IsInvalid(server.User), Parameter: nameof(Server.User)));
         }
 
         private void ValidateServerUuid(string serverUuid) =>
-            Validate((IsInvalid(serverUuid), nameof(serverUuid)));
+            Validate(
+                message: "Invalid server. Please fix the errors and try again.",
+                (Rule: IsInvalid(serverUuid), Parameter: nameof(serverUuid)));
 
         private static void ValidateServerIsNotNull(Server server)
         {
@@ -37,11 +41,9 @@ namespace Coolify.Net.Services.Foundations.Servers
             Message = "Text is required"
         };
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate(string message, params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidServerException =
-                new InvalidServerException(
-                    message: "Invalid server. Please fix the errors and try again.");
+            var invalidServerException = new InvalidServerException(message);
 
             foreach ((dynamic rule, string parameter) in validations)
             {

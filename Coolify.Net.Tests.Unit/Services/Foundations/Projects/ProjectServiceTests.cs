@@ -3,13 +3,16 @@
 // FREE TO USE TO CONNECT THE WORLD
 // ---------------------------------------------------------------
 
+using System.Linq.Expressions;
 using System.Net;
 using Coolify.Net.Brokers.CoolifyApis;
 using Coolify.Net.Brokers.Loggings;
 using Coolify.Net.Models.Externals.Projects;
 using Coolify.Net.Models.Foundations.Projects;
+using Coolify.Net.Models.Foundations.Projects.Exceptions;
 using Coolify.Net.Services.Foundations.Projects;
 using Moq;
+using Xeptions;
 
 namespace Coolify.Net.Tests.Unit.Services.Foundations.Projects
 {
@@ -96,33 +99,60 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.Projects
                 ProjectUuid = environment.ProjectUuid
             };
 
-        public static TheoryData<HttpStatusCode> DependencyValidationHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.Conflict
-            };
-
-        public static TheoryData<HttpStatusCode> CriticalDependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.Unauthorized,
-                HttpStatusCode.Forbidden,
-                HttpStatusCode.NotFound
-            };
-
-        public static TheoryData<HttpStatusCode> DependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.TooManyRequests,
-                HttpStatusCode.ServiceUnavailable,
-                HttpStatusCode.InternalServerError
-            };
-
         private static HttpRequestException CreateHttpRequestException(HttpStatusCode statusCode) =>
             new HttpRequestException(
                 message: "HTTP error occurred.",
                 inner: null,
                 statusCode: statusCode);
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static ProjectDependencyValidationException CreateInvalidProjectDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var invalidProjectException = new InvalidProjectException(
+                message: "Invalid project.",
+                innerException: httpRequestException);
+
+            return new ProjectDependencyValidationException(
+                message: "Project dependency validation error occurred, fix the errors and try again.",
+                innerException: invalidProjectException);
+        }
+
+        private static ProjectDependencyValidationException CreateAlreadyExistsProjectDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var alreadyExistsProjectException = new AlreadyExistsProjectException(
+                message: "Project already exists.",
+                innerException: httpRequestException);
+
+            return new ProjectDependencyValidationException(
+                message: "Project dependency validation error occurred, fix the errors and try again.",
+                innerException: alreadyExistsProjectException);
+        }
+
+        private static ProjectDependencyException CreateFailedProjectDependencyException(
+            HttpRequestException httpRequestException)
+        {
+            var failedProjectDependencyException = new FailedProjectDependencyException(
+                message: "Failed project dependency error occurred.",
+                innerException: httpRequestException);
+
+            return new ProjectDependencyException(
+                message: "Project dependency error occurred, contact support.",
+                innerException: failedProjectDependencyException);
+        }
+
+        private static ProjectServiceException CreateFailedProjectServiceException(Exception exception)
+        {
+            var failedProjectServiceException = new FailedProjectServiceException(
+                message: "Failed project service error occurred.",
+                innerException: exception);
+
+            return new ProjectServiceException(
+                message: "Project service error occurred, contact support.",
+                innerException: failedProjectServiceException);
+        }
     }
 }

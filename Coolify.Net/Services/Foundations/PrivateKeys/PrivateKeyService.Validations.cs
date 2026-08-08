@@ -15,12 +15,16 @@ namespace Coolify.Net.Services.Foundations.PrivateKeys
             ValidatePrivateKeyIsNotNull(privateKey);
 
             Validate(
-                (IsInvalid(privateKey.Name), nameof(PrivateKey.Name)),
-                (IsInvalid(privateKey.PrivateKeyValue), nameof(PrivateKey.PrivateKeyValue)));
+                message: "Invalid private key. Please fix the errors and try again.",
+
+                (Rule: IsInvalid(privateKey.Name), Parameter: nameof(PrivateKey.Name)),
+                (Rule: IsInvalid(privateKey.PrivateKeyValue), Parameter: nameof(PrivateKey.PrivateKeyValue)));
         }
 
         private void ValidatePrivateKeyUuid(string privateKeyUuid) =>
-            Validate((IsInvalid(privateKeyUuid), nameof(privateKeyUuid)));
+            Validate(
+                message: "Invalid private key. Please fix the errors and try again.",
+                (Rule: IsInvalid(privateKeyUuid), Parameter: nameof(privateKeyUuid)));
 
         private static void ValidatePrivateKeyIsNotNull(PrivateKey privateKey)
         {
@@ -36,11 +40,9 @@ namespace Coolify.Net.Services.Foundations.PrivateKeys
             Message = "Text is required"
         };
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate(string message, params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidPrivateKeyException =
-                new InvalidPrivateKeyException(
-                    message: "Invalid private key. Please fix the errors and try again.");
+            var invalidPrivateKeyException = new InvalidPrivateKeyException(message);
 
             foreach ((dynamic rule, string parameter) in validations)
             {

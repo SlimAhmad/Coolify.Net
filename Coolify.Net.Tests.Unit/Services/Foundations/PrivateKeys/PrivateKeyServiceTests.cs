@@ -3,13 +3,16 @@
 // FREE TO USE TO CONNECT THE WORLD
 // ---------------------------------------------------------------
 
+using System.Linq.Expressions;
 using System.Net;
 using Coolify.Net.Brokers.CoolifyApis;
 using Coolify.Net.Brokers.Loggings;
 using Coolify.Net.Models.Externals.PrivateKeys;
 using Coolify.Net.Models.Foundations.PrivateKeys;
+using Coolify.Net.Models.Foundations.PrivateKeys.Exceptions;
 using Coolify.Net.Services.Foundations.PrivateKeys;
 using Moq;
+using Xeptions;
 
 namespace Coolify.Net.Tests.Unit.Services.Foundations.PrivateKeys
 {
@@ -73,33 +76,60 @@ namespace Coolify.Net.Tests.Unit.Services.Foundations.PrivateKeys
             && actual.Name == expected.Name
             && actual.PrivateKeyValue == expected.PrivateKeyValue;
 
-        public static TheoryData<HttpStatusCode> DependencyValidationHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.Conflict
-            };
-
-        public static TheoryData<HttpStatusCode> CriticalDependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.Unauthorized,
-                HttpStatusCode.Forbidden,
-                HttpStatusCode.NotFound
-            };
-
-        public static TheoryData<HttpStatusCode> DependencyHttpStatusCodes() =>
-            new TheoryData<HttpStatusCode>
-            {
-                HttpStatusCode.TooManyRequests,
-                HttpStatusCode.ServiceUnavailable,
-                HttpStatusCode.InternalServerError
-            };
-
         private static HttpRequestException CreateHttpRequestException(HttpStatusCode statusCode) =>
             new HttpRequestException(
                 message: "HTTP error occurred.",
                 inner: null,
                 statusCode: statusCode);
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static PrivateKeyDependencyValidationException CreateInvalidPrivateKeyDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var invalidPrivateKeyException = new InvalidPrivateKeyException(
+                message: "Invalid private key.",
+                innerException: httpRequestException);
+
+            return new PrivateKeyDependencyValidationException(
+                message: "Private key dependency validation error occurred, fix the errors and try again.",
+                innerException: invalidPrivateKeyException);
+        }
+
+        private static PrivateKeyDependencyValidationException CreateAlreadyExistsPrivateKeyDependencyValidationException(
+            HttpRequestException httpRequestException)
+        {
+            var alreadyExistsPrivateKeyException = new AlreadyExistsPrivateKeyException(
+                message: "Private key already exists.",
+                innerException: httpRequestException);
+
+            return new PrivateKeyDependencyValidationException(
+                message: "Private key dependency validation error occurred, fix the errors and try again.",
+                innerException: alreadyExistsPrivateKeyException);
+        }
+
+        private static PrivateKeyDependencyException CreateFailedPrivateKeyDependencyException(
+            HttpRequestException httpRequestException)
+        {
+            var failedPrivateKeyDependencyException = new FailedPrivateKeyDependencyException(
+                message: "Failed private key dependency error occurred.",
+                innerException: httpRequestException);
+
+            return new PrivateKeyDependencyException(
+                message: "Private key dependency error occurred, contact support.",
+                innerException: failedPrivateKeyDependencyException);
+        }
+
+        private static PrivateKeyServiceException CreateFailedPrivateKeyServiceException(Exception exception)
+        {
+            var failedPrivateKeyServiceException = new FailedPrivateKeyServiceException(
+                message: "Failed private key service error occurred.",
+                innerException: exception);
+
+            return new PrivateKeyServiceException(
+                message: "Private key service error occurred, contact support.",
+                innerException: failedPrivateKeyServiceException);
+        }
     }
 }
