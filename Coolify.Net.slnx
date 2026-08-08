@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Coolify.Net/Coolify.Net.csproj" />
+  <Project Path="Coolify.Net.Tests.Unit/Coolify.Net.Tests.Unit.csproj" />
+  <Project Path="Coolify.Net.Provision/Coolify.Net.Provision.csproj" />
+  <Project Path="Coolify.Net.Tests.Acceptance/Coolify.Net.Tests.Acceptance.csproj" />
+</Solution>
