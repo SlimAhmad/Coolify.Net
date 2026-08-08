@@ -3,6 +3,7 @@
 // FREE TO USE TO CONNECT THE WORLD
 // ---------------------------------------------------------------
 
+using Coolify.Net.Clients.Coolify.Net;
 using WireMock.Server;
 
 namespace Coolify.Net.Tests.Acceptance.Brokers

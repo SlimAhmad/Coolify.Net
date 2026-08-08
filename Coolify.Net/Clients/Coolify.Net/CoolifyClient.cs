@@ -15,7 +15,7 @@ using Coolify.Net.Clients.Teams;
 using Coolify.Net.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Coolify.Net
+namespace Coolify.Net.Clients.Coolify.Net
 {
     /// <summary>
     /// Represents the main entry point for the Coolify.Net library, providing access

@@ -3,6 +3,7 @@
 // FREE TO USE TO CONNECT THE WORLD
 // ---------------------------------------------------------------
 
+using Coolify.Net.Clients.Coolify.Net;
 using Coolify.Net.Models.Foundations.Applications;
 using Coolify.Net.Models.Foundations.Databases;
 using Coolify.Net.Models.Foundations.Projects;

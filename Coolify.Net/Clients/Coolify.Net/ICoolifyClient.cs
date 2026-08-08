@@ -13,7 +13,7 @@ using Coolify.Net.Clients.Servers;
 using Coolify.Net.Clients.Systems;
 using Coolify.Net.Clients.Teams;
 
-namespace Coolify.Net
+namespace Coolify.Net.Clients.Coolify.Net
 {
     /// <summary>
     /// Defines the contract for the main Coolify client, providing access to every Coolify
