@@ -12,17 +12,18 @@ namespace Coolify.Net.Tests.Acceptance.Brokers
     /// Emulates the Coolify REST API (a resource this library does not own) using an
     /// in-process WireMock server, and exposes a real <see cref="CoolifyClient"/> wired to
     /// point at it. Acceptance tests drive the full Broker/Foundation/Processing/Client
-    /// stack through this fixture's <see cref="Client"/> and assert against the emulated
-    /// server's received requests/configured stubs.
+    /// stack through this broker's <see cref="Client"/> and assert against the emulated
+    /// server's received requests/configured stubs. Shared once per test assembly via
+    /// <see cref="ClientTestCollection"/>.
     /// </summary>
-    public class ApiFixture : IDisposable
+    public class ClientBroker : IDisposable
     {
         public const string ApiToken = "acceptance-test-token";
 
         public WireMockServer Server { get; }
         public ICoolifyClient Client { get; }
 
-        public ApiFixture()
+        public ClientBroker()
         {
             this.Server = WireMockServer.Start();
 
