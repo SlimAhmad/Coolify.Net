@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/coolify-net-logo.png" alt="Coolify.Net logo" width="240">
+  <img src="assets/coolify.net-logo.svg" alt="Coolify.Net logo" width="240">
 </p>
 
 # Coolify.Net
