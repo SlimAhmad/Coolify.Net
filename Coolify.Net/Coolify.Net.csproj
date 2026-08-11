@@ -2,23 +2,50 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Coolify.Net</RootNamespace>
     <AssemblyName>Coolify.Net</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Coolify.Net</Title>
+    <Authors>$(AssemblyName), Ahmad Salim</Authors>
+    <Description>A .NET client library for the Coolify self-hosting platform REST API. Coolify.Net wraps every Coolify resource — servers, projects, applications, databases, one-click services, deployments, teams, private keys, and system status — behind a small, typed, fully async surface so you can provision and manage Coolify infrastructure from C# without hand-writing HTTP calls.</Description>
+    <PackageProjectUrl>https://github.com/SlimAhmad/Coolify.Net</PackageProjectUrl>
+    <PackageIcon>coolify-net-logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/SlimAhmad/Coolify.Net</RepositoryUrl>
+    <PackageTags>Coolify</PackageTags>
+    <Copyright>MIT License</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+     <AssemblyVersion>1.0.1</AssemblyVersion>
+     <FileVersion>1.0.1</FileVersion>
+     <Version>1.0.1</Version>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="..\..\..\..\Downloads\Coolify.Net.png" Link="Coolify.Net.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Coolify.Net.Tests.Unit" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\assets\coolify-net-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RESTFulSense" Version="3.2.0" />
     <PackageReference Include="Xeption" Version="2.*" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
